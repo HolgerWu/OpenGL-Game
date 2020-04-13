@@ -37,10 +37,10 @@ public class Loader {
         return new RawModel(vaoID,indices.length);
     }
 
-    public int loadTexture(String filename) throws FileNotFoundException {
+    public int loadTexture(String filename) {
         Texture texture = null;
         try {
-            texture = TextureLoader.getTexture("PNG",new FileInputStream("res/"+filename+".png"));
+            texture = TextureLoader.getTexture("PNG",new FileInputStream("res/Stall Model and Texture/"+filename+".png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
