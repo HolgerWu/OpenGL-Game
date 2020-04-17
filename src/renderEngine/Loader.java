@@ -25,7 +25,7 @@ public class Loader {
     //texture: pngs to be fixed to triangle, 2^n * 2^n pixels needed.
     private List<Integer> textures = new ArrayList<>();
 
-    public RawModel loadToVAO(float [] positions,float []textureCoords, int[] indices)
+    public RawModel loadToVAO(float [] positions,float []textureCoords,float [] normals, int[] indices)
     {
         int vaoID = createVAO();
         bindIndicesBuffer(indices);
@@ -33,6 +33,7 @@ public class Loader {
         storeDataInAttributeList(0,3,positions);
         // 1 too. texture coordinate only has two component (called UV coordinate system.)
         storeDataInAttributeList(1,2,textureCoords);
+        storeDataInAttributeList(2,3,normals);
         unbindVAO();
         return new RawModel(vaoID,indices.length);
     }
@@ -43,9 +44,11 @@ public class Loader {
             texture = TextureLoader.getTexture("PNG",new FileInputStream("res/Stall Model and Texture/"+filename+".png"));
         } catch (IOException e) {
             e.printStackTrace();
+            System.err.println("Tried to load texture " + filename + ".png , didn't work");
+            System.exit(-1);
         }
-        int textureID =texture.getTextureID();
-        return textureID;
+        textures.add(texture.getTextureID());
+        return texture.getTextureID();
     }
     private int createVAO(){
 

@@ -6,6 +6,7 @@ import models.TexturedModel;
 import org.lwjgl.opengl.*;
 import org.lwjgl.util.vector.Matrix4f;
 import shaders.StaticShader;
+import textures.ModelTexture;
 import toolbox.Maths;
 
 public class Renderer {
@@ -43,9 +44,13 @@ public class Renderer {
         GL20.glEnableVertexAttribArray(0);
         //attrubute list 1 stores the coordinate data
         GL20.glEnableVertexAttribArray(1);
+        GL20.glEnableVertexAttribArray(2);
 
         Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(),entity.getRotX(),entity.getRotX(),entity.getRotZ(),entity.getScale());
         shader.loadTransformationMatrix(transformationMatrix);
+
+        ModelTexture texture = model.getTexture();
+        shader.lodaShineVariables(texture.getShineDamper(),texture.getReflectivity());
 
         //tell the OpenGL which texture to be rendered.
         //sample2D is using the constant GL_TEXTURE0 by default.
@@ -56,13 +61,14 @@ public class Renderer {
         GL11.glDrawElements(GL11.GL_TRIANGLES,rawModel.getVertexCount(),GL11.GL_UNSIGNED_INT,0);
         GL20.glDisableVertexAttribArray(0);
         GL20.glDisableVertexAttribArray(1);
+        GL20.glDisableVertexAttribArray(2);
         GL30.glBindVertexArray(0);
     }
 
     private void createProjectionMatrix(){
         //copied from tutorial 8
         float aspectRatio = (float) Display.getWidth() / (float) Display.getHeight();
-        float y_scale = (float) ((1f / Math.tan(Math.toRadians(FOV/2f))) * aspectRatio);
+        float y_scale = (float) ((1f / Math.tan(Math.toRadians(FOV / 2f))) * aspectRatio);
         float x_scale = y_scale / aspectRatio;
         float frustum_length = FAR_PLANE - NEAR_PLANE;
 
